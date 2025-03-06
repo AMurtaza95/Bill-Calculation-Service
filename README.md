@@ -83,4 +83,4 @@ mvn checkstyle:check
 
 ### UML Class Diagram
 
-[![Bill Calculation Service UML Class Diagram] ](https://github.com/AMurtaza95/Bill-Calculation-Service/blob/main/Bill%20Calculation%20Service%20Class%20Diagram.png)
+![Bill Calculation Service UML Class Diagram](https://github.com/AMurtaza95/Bill-Calculation-Service/blob/main/Bill%20Calculation%20Service%20Class%20Diagram.png)
