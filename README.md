@@ -79,3 +79,8 @@ mvn checkstyle:check
 - Ability to test API endpoints directly from the UI
 - Displays all available endpoints, request/response models
 - Supports authentication testing
+
+
+### UML Class Diagram
+
+[![Bill Calculation Service UML Class Diagram] ](https://github.com/AMurtaza95/Bill-Calculation-Service/blob/main/Bill%20Calculation%20Service%20Class%20Diagram.png)
