@@ -31,7 +31,7 @@ public class DiscountService {
                 .reduce(ZERO, BigDecimal::add);
 
         if(!totalAmount.equals(bill.getTotalAmount())) {
-            throw new RuntimeException("Total amount is different");
+            throw new RuntimeException("Total amount is different from Item total amount");
         }
 
         log.info("Total amount: {}", totalAmount);
