@@ -1,22 +1,20 @@
 package com.billcalculationservice.Bill.Calculation.service;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.client.RestTemplate;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootApplication
-@EnableCaching
-public class BillCalculationServiceApplication {
+@SpringBootTest(properties = {
+		"spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration"
+})
+class BillCalculationServiceApplicationTests {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BillCalculationServiceApplication.class, args);
+	@Test
+	void contextLoads() {
 	}
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
+	@Test
+	public void testMainMethod() {
+		BillCalculationServiceApplication.main(new String[]{});
 	}
 
 }
