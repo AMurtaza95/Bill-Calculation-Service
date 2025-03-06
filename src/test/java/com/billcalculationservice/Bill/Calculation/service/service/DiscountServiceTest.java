@@ -256,7 +256,7 @@ public class DiscountServiceTest {
             discountService.calculateDiscount(bill);
         });
 
-        assertEquals("Total amount is different", exception.getMessage());
+        assertEquals("Total amount is different from Item total amount", exception.getMessage());
     }
 
     @Test
