@@ -3,7 +3,7 @@
 ## Prerequisites
 - Java 17 or later
 - Maven
-- API Key for Open Exchange Rates
+- API Key for Open Exchange Rates (Open Exchange Rates API)
 
 ## Project Setup
 
