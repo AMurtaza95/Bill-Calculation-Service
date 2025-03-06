@@ -1,9 +1,7 @@
 package com.billcalculationservice.Bill.Calculation.service.advice;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,58 +10,101 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-@ExtendWith(MockitoExtension.class)
-public class ExceptionAdviceTest {
+class ExceptionAdviceTest {
 
-    @InjectMocks
     private ExceptionAdvice exceptionAdvice;
 
-    @Test
-    void handleTypeMismatch_ReturnsCorrectResponse() {
-        String errorMessage = "Failed to convert value";
-        MethodArgumentTypeMismatchException exception = mock(MethodArgumentTypeMismatchException.class);
-        when(exception.getMessage()).thenReturn(errorMessage);
-
-        ResponseEntity<String> response = exceptionAdvice.handleTypeMismatch(exception);
-
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Invalid input: " + errorMessage, response.getBody());
+    @BeforeEach
+    void setUp() {
+        exceptionAdvice = new ExceptionAdvice();
     }
 
     @Test
-    void handleValidationExceptions_ReturnsCorrectResponse() {
-        MethodArgumentNotValidException exception = mock(MethodArgumentNotValidException.class);
+    void testHandleTypeMismatch() {
+        MethodArgumentTypeMismatchException ex = mock(MethodArgumentTypeMismatchException.class);
+        when(ex.getMessage()).thenReturn("Type mismatch test message");
+
+        ResponseEntity<String> response = exceptionAdvice.handleTypeMismatch(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertTrue(response.getBody().contains("Invalid input: Type mismatch test message"));
+    }
+
+    @Test
+    void testHandleValidationExceptions() {
+        MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
         BindingResult bindingResult = mock(BindingResult.class);
 
-        FieldError error1 = new FieldError("objectName", "field1", "Error message 1");
-        FieldError error2 = new FieldError("objectName", "field2", "Error message 2");
+        FieldError fieldError = new FieldError("objectName", "fieldName", "error message");
+        when(ex.getBindingResult()).thenReturn(bindingResult);
+        when(bindingResult.getAllErrors()).thenReturn(Collections.singletonList(fieldError));
 
-        when(exception.getBindingResult()).thenReturn(bindingResult);
-        when(bindingResult.getAllErrors()).thenReturn(Arrays.asList(error1, error2));
-
-        ResponseEntity<Map<String, String>> response = exceptionAdvice.handleValidationExceptions(exception);
+        ResponseEntity<Map<String, String>> response = exceptionAdvice.handleValidationExceptions(ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        Map<String, String> errors = response.getBody();
-        assertEquals(2, errors.size());
-        assertEquals("Error message 1", errors.get("field1"));
-        assertEquals("Error message 2", errors.get("field2"));
+        assertNotNull(response.getBody());
+        assertEquals("error message", response.getBody().get("fieldName"));
     }
 
     @Test
-    void handleIllegalArgumentException_ReturnsCorrectResponse() {
-        String errorMessage = "Invalid argument";
-        IllegalArgumentException exception = new IllegalArgumentException(errorMessage);
+    void testHandleIllegalArgumentException() {
+        IllegalArgumentException ex = new IllegalArgumentException("Illegal argument test");
 
-        ResponseEntity<String> response = exceptionAdvice.handleIllegalArgumentException(exception);
+        ResponseEntity<String> response = exceptionAdvice.handleIllegalArgumentException(ex);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals(errorMessage, response.getBody());
+        assertEquals("Illegal argument test", response.getBody());
+    }
+
+    @Test
+    void testHandleRuntimeException() {
+        RuntimeException ex = new RuntimeException("Runtime error test");
+
+        ResponseEntity<Map<String, Object>> response = exceptionAdvice.handleRuntimeException(ex);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("An unexpected error occurred", response.getBody().get("message"));
+        assertEquals("Runtime error test", response.getBody().get("details"));
+    }
+
+    @Test
+    void testHandleGeneralException() {
+        Exception ex = new Exception("General error test");
+
+        ResponseEntity<Map<String, Object>> response = exceptionAdvice.handleGeneralException(ex);
+
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("A system error occurred", response.getBody().get("message"));
+        assertEquals("General error test", response.getBody().get("details"));
+    }
+
+    @Test
+    void testHandleValidationExceptionsWithMultipleErrors() {
+        MethodArgumentNotValidException ex = mock(MethodArgumentNotValidException.class);
+        BindingResult bindingResult = mock(BindingResult.class);
+
+        List<FieldError> fieldErrors = Arrays.asList(
+                new FieldError("object1", "field1", "error1"),
+                new FieldError("object2", "field2", "error2")
+        );
+
+        when(ex.getBindingResult()).thenReturn(bindingResult);
+        doReturn(fieldErrors).when(bindingResult).getAllErrors();
+
+        ResponseEntity<Map<String, String>> response = exceptionAdvice.handleValidationExceptions(ex);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals("error1", response.getBody().get("field1"));
+        assertEquals("error2", response.getBody().get("field2"));
     }
 }
