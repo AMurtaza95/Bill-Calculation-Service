@@ -18,7 +18,7 @@ cd bill-calculation-service
 2. Add your Open Exchange Rates API key:
 ```properties
 exchange.api.url=https://open.er-api.com/v6/latest
-exchange.api.key=YOUR_API_KEY_HERE
+exchange.api.key=0d526a6ffb64416d9916e942f5ffc0d1
 ```
 
 ## Running the Application
