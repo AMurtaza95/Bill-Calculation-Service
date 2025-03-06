@@ -1,7 +1,7 @@
 # Bill Calculation Service - Build Instructions
 
 ## Prerequisites
-- Java 17 or later
+- Java 17
 - Maven
 - API Key for Open Exchange Rates (Open Exchange Rates API)
 
