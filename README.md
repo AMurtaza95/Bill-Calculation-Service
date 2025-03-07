@@ -16,8 +16,8 @@
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/bill-calculation-service.git
-cd bill-calculation-service
+git clone https://github.com/AMurtaza95/Bill-Calculation-Service.git
+cd Bill-Calculation-Service
 ```
 
 ### Running the Application
