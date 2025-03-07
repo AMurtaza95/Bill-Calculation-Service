@@ -1,7 +1,12 @@
 # Bill Calculation Service - Build Instructions
 
 ## Prerequisites
-- Download JDK 17
+
+- Docker
+- Docker Compose
+
+## Tech Stack
+
 - Java 17
 - Maven
 - API Key for Open Exchange Rates (Open Exchange Rates API)
@@ -9,29 +14,21 @@
 ## Project Setup
 
 ### Clone the Repository
+
 ```bash
 git clone https://github.com/your-username/bill-calculation-service.git
 cd bill-calculation-service
 ```
 
-### Configure API Key
-1. Open `src/main/resources/application.properties`
-2. Add your Open Exchange Rates API key:
-```properties
-exchange.api.url=https://open.er-api.com/v6/latest
-exchange.api.key=0d526a6ffb64416d9916e942f5ffc0d1
-```
+### Running the Application
 
-## Running the Application
-
-### Using Maven
 ```bash
-# Build the project
-mvn clean install
-
-# Run the application
-mvn spring-boot:run
+docker-compose up -d
 ```
+This command will:
+
+* Build the Docker image
+* Launch the Bill Calculation Service application
 
 ### Running Tests
 ```bash
@@ -52,14 +49,6 @@ mvn jacoco:report
 
 # The report will be available at:
 # target/site/jacoco/index.html
-```
-
-## Build Commands
-
-### Full Build
-```bash
-# Clean, compile, test, and package the application
-mvn clean install
 ```
 
 ### Static Code Analysis
