@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  bill-calculation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bill-calculation
+    ports:
+      - "8080:8080"
